@@ -428,7 +428,7 @@ socketmmi_get_name(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef module_methods[] = {
-	{"getSocketStateChangedCallbackList", (PyCFunction)(void *)socketmmi_get_socket_state_changed_cb_list, METH_NOARGS,
+	{"getSocketStateChangedCallbackList", (PyCFunction)socketmmi_get_socket_state_changed_cb_list, METH_NOARGS,
 	 "get socket state change callback list"
 	},
 	{"setInit", (PyCFunction)socketmmi_set_init, METH_VARARGS,
@@ -470,29 +470,21 @@ static PyMethodDef module_methods[] = {
 	{NULL, NULL, 0, NULL}   /* Sentinel */
 };
 
-#if PY_MAJOR_VERSION >= 3
-	static struct PyModuleDef moduledef = {
-		PyModuleDef_HEAD_INIT,
-		"socketmmi",											/* m_name */
-		"Module that implements mmi via unix domain socket.",	/* m_doc */
-		-1,														/* m_size */
-		module_methods,											/* m_methods */
-		NULL,													/* m_reload */
-		NULL,													/* m_traverse */
-		NULL,													/* m_clear */
-		NULL,													/* m_free */
-	};
-#endif
+static struct PyModuleDef socketmmi_moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"socketmmi",											/* m_name */
+	"Module that implements mmi via unix domain socket.",	/* m_doc */
+	-1,														/* m_size */
+	module_methods,											/* m_methods */
+	NULL,													/* m_reload */
+	NULL,													/* m_traverse */
+	NULL,													/* m_clear */
+	NULL,													/* m_free */
+};
 
 
-PyMODINIT_FUNC
-initsocketmmi(void)
+PyMODINIT_FUNC PyInit_socketmmi(void)
 {
-#if PY_MAJOR_VERSION >= 3
-	PyModule_Create(&moduledef);
-#else
-	Py_InitModule3("socketmmi", module_methods,
-		"Module that implements mmi via unix domain socket.");
-#endif
+	return PyModule_Create(&socketmmi_moduledef);
 }
 };
